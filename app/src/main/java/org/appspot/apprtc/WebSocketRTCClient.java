@@ -147,38 +147,35 @@ public class WebSocketRTCClient implements AppRTCClient,
   // looper thread.
   private void signalingParametersReady(final SignalingParameters params) {
     Log.d(TAG, "Room connection completed.");
-    if (loopback && (!params.initiator || params.offerSdp != null)) {
-      reportError("Loopback room is busy.");
-      return;
-    }
-    if (!loopback && !params.initiator && params.offerSdp == null) {
-      Log.w(TAG, "No offer SDP in room response.");
-    }
-    initiator = params.initiator;
-    postMessageUrl = params.roomUrl + "/message/"
-      + params.roomId + "/" + params.clientId;
-    byeMessageUrl = params.roomUrl + "/bye/"
-      + params.roomId + "/" + params.clientId;
+//    if (loopback && (!params.initiator || params.offerSdp != null)) {
+//      reportError("Loopback room is busy.");
+//      return;
+//    }
+//    if (!loopback && !params.initiator && params.offerSdp == null) {
+//      Log.w(TAG, "No offer SDP in room response.");
+//    }
+//    initiator = params.initiator;
+//    postMessageUrl = params.roomUrl + "/message/" + params.roomId + "/" + params.clientId;
+//    byeMessageUrl = params.roomUrl + "/bye/" + params.roomId + "/" + params.clientId;
     roomState = ConnectionState.CONNECTED;
 
     // Fire connection and signaling parameters events.
     events.onConnectedToRoom(params);
 
     // Connect to WebSocket server.
-    wsClient.connect(
-        params.wssUrl, params.wssPostUrl, params.roomId, params.clientId);
+//    wsClient.connect( params.wssUrl, params.wssPostUrl, params.roomId, params.clientId);
 
     // For call receiver get sdp offer and ice candidates
     // from room parameters and fire corresponding events.
     if (!params.initiator) {
-      if (params.offerSdp != null) {
-        events.onRemoteDescription(params.offerSdp);
-      }
-      if (params.iceCandidates != null) {
-        for (IceCandidate iceCandidate : params.iceCandidates) {
-          events.onRemoteIceCandidate(iceCandidate);
-        }
-      }
+//      if (params.offerSdp != null) {
+//        events.onRemoteDescription(params.offerSdp);
+//      }
+//      if (params.iceCandidates != null) {
+//        for (IceCandidate iceCandidate : params.iceCandidates) {
+//          events.onRemoteIceCandidate(iceCandidate);
+//        }
+//      }
     }
   }
 

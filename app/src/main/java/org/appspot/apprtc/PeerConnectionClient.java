@@ -51,7 +51,9 @@ import org.webrtc.VideoRenderer;
 import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -198,16 +200,17 @@ public class PeerConnectionClient {
     queuedRemoteCandidates = new LinkedList<IceCandidate>();
 
     sdpMediaConstraints = new MediaConstraints();
-    sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair(
-        "OfferToReceiveAudio", "true"));
-    sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair(
-        "OfferToReceiveVideo", "true"));
+    sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
+    sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
 
-    MediaConstraints pcConstraints = signalingParameters.pcConstraints;
-    pcConstraints.optional.add(
-        new MediaConstraints.KeyValuePair("RtpDataChannels", "true"));
-    pc = factory.createPeerConnection(signalingParameters.iceServers,
-        pcConstraints, pcObserver);
+//    MediaConstraints pcConstraints = signalingParameters.pcConstraints;
+    MediaConstraints pcConstraints = new MediaConstraints();
+    pcConstraints.mandatory.add(new KeyValuePair("DtlsSrtpKeyAgreement", "true"));
+//      KeyValuePair kvp = new KeyValuePair("DtlsSrtpKeyAgreement", "true");
+//      pcConstraints.mandatory.add(kvp);
+    List<PeerConnection.IceServer> iceServers = new ArrayList<PeerConnection.IceServer>();
+    pcConstraints.optional.add( new MediaConstraints.KeyValuePair("RtpDataChannels", "true"));
+    pc = factory.createPeerConnection(iceServers, pcConstraints, pcObserver);
     isInitiator = false;
 
     // Uncomment to get ALL WebRTC tracing and SENSITIVE libjingle logging.
@@ -218,15 +221,17 @@ public class PeerConnectionClient {
     //     Logging.Severity.LS_SENSITIVE);
 
     mediaStream = factory.createLocalMediaStream("ARDAMS");
-    if (signalingParameters.videoConstraints != null) {
+//    if (signalingParameters.videoConstraints != null) {
       mediaStream.addTrack(createVideoTrack(useFrontFacingCamera));
-    }
+//    }
 
-    if (signalingParameters.audioConstraints != null) {
+//    if (signalingParameters.audioConstraints != null) {
       mediaStream.addTrack(factory.createAudioTrack(
-          AUDIO_TRACK_ID,
-          factory.createAudioSource(signalingParameters.audioConstraints)));
-    }
+                      AUDIO_TRACK_ID,
+                      //factory.createAudioSource(signalingParameters.audioConstraints))
+                      factory.createAudioSource(new MediaConstraints()))
+      );
+//    }
     pc.addStream(mediaStream);
     Log.d(TAG, "Peer connection created.");
   }
@@ -251,13 +256,14 @@ public class PeerConnectionClient {
   }
 
   public boolean isHDVideo() {
-    if (signalingParameters.videoConstraints == null) {
+//    if (signalingParameters.videoConstraints == null) {
+    if (true) {
       return false;
     }
     int minWidth = 0;
     int minHeight = 0;
-    for (KeyValuePair keyValuePair :
-        signalingParameters.videoConstraints.mandatory) {
+      /*
+    for (KeyValuePair keyValuePair : signalingParameters.videoConstraints.mandatory) {
       if (keyValuePair.getKey().equals("minWidth")) {
         try {
           minWidth = Integer.parseInt(keyValuePair.getValue());
@@ -272,6 +278,7 @@ public class PeerConnectionClient {
         }
       }
     }
+    */
     if (minWidth * minHeight >= 1280 * 720) {
       return true;
     } else {
@@ -346,15 +353,18 @@ public class PeerConnectionClient {
   }
 
   public void stopVideoSource() {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        if (videoSource != null && !videoSourceStopped) {
-          Log.d(TAG, "Stop video source.");
-          videoSource.stop();
-          videoSourceStopped = true;
+    executor.execute(new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            if (videoSource != null && !videoSourceStopped)
+            {
+                Log.d(TAG, "Stop video source.");
+                videoSource.stop();
+                videoSourceStopped = true;
+            }
         }
-      }
     });
   }
 
@@ -418,8 +428,8 @@ public class PeerConnectionClient {
       videoSource.dispose();
     }
 
-    videoSource = factory.createVideoSource(
-        capturer, signalingParameters.videoConstraints);
+//    videoSource = factory.createVideoSource(capturer, signalingParameters.videoConstraints);
+    videoSource = factory.createVideoSource(capturer, new MediaConstraints());
     String trackExtension = frontFacing ? "frontFacing" : "backFacing";
     VideoTrack videoTrack =
         factory.createVideoTrack(VIDEO_TRACK_ID + trackExtension, videoSource);
@@ -520,9 +530,9 @@ public class PeerConnectionClient {
   }
 
   private void switchCameraInternal() {
-    if (signalingParameters.videoConstraints == null) {
-      return;  // No video is sent.
-    }
+//    if (signalingParameters.videoConstraints == null) {
+//      return;  // No video is sent.
+//    }
     if (pc.signalingState() != PeerConnection.SignalingState.STABLE) {
       Log.e(TAG, "Switching camera during negotiation is not handled.");
       return;

@@ -86,8 +86,8 @@ public class AsyncHttpURLConnection {
         connection.setDoOutput(true);
         connection.setFixedLengthStreamingMode(postData.length);
       }
-      connection.setRequestProperty(
-          "content-type", "text/plain; charset=utf-8");
+//      connection.setRequestProperty("content-type", "text/plain; charset=utf-8");
+      connection.setRequestProperty("content-type", "application/json");
 
       // Send POST request.
       if (doOutput && postData.length > 0) {

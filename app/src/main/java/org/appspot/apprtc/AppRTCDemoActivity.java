@@ -222,7 +222,7 @@ public class AppRTCDemoActivity extends Activity
         // Start room connection.
         logAndToast(getString(R.string.connecting_to, url));
 //        appRtcClient = new WebSocketRTCClient(this);
-        appRtcClient = new EventSourceRTCClient(this);
+        appRtcClient = new EventSourceRTCClient(this, roomName);
         appRtcClient.connectToRoom(url.toString(), loopback);
         if (loopback) {
           roomNameView.setText("loopback");
@@ -493,11 +493,9 @@ public class AppRTCDemoActivity extends Activity
       // Create peer connection factory if render EGL context ready event
       // has not been fired yet.
       pc = new PeerConnectionClient();
-      pc.createPeerConnectionFactory(
-          this, hwCodec, VideoRendererGui.getEGLContext(), this);
+      pc.createPeerConnectionFactory(this, hwCodec, VideoRendererGui.getEGLContext(), this);
     }
-    pc.createPeerConnection(
-        localRender, remoteRender, signalingParameters, startBitrate);
+    pc.createPeerConnection(localRender, remoteRender, signalingParameters, startBitrate);
     if (pc.isHDVideo()) {
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     } else {

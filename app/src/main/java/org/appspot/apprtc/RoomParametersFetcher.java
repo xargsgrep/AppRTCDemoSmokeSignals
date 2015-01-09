@@ -180,13 +180,13 @@ public class RoomParametersFetcher {
               roomJson.getString("media_constraints")));
       Log.d(TAG, "audioConstraints: " + audioConstraints);
 
-      SignalingParameters params = new SignalingParameters(
-          iceServers, initiator,
-          pcConstraints, videoConstraints, audioConstraints,
-          roomUrl, roomId, clientId,
-          wssUrl, wssPostUrl,
-          offerSdp, iceCandidates);
-      events.onSignalingParametersReady(params);
+//      SignalingParameters params = new SignalingParameters(
+//          iceServers, initiator,
+//          pcConstraints, videoConstraints, audioConstraints,
+//          roomUrl, roomId, clientId,
+//          wssUrl, wssPostUrl,
+//          offerSdp, iceCandidates);
+      events.onSignalingParametersReady(new SignalingParameters("uid", "token"));
     } catch (JSONException e) {
       events.onSignalingParametersError(
           "Room JSON parsing error: " + e.toString());

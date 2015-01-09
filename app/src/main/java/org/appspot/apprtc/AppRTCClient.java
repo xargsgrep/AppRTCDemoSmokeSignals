@@ -65,22 +65,45 @@ public interface AppRTCClient {
   public void disconnectFromRoom();
 
   /**
-   * Struct holding the signaling parameters of an AppRTC room.
+   * Struct holding the signaling parameters of a SmokeSignal room.
    */
   public class SignalingParameters {
-    public final List<PeerConnection.IceServer> iceServers;
-    public final boolean initiator;
-    public final MediaConstraints pcConstraints;
-    public final MediaConstraints videoConstraints;
-    public final MediaConstraints audioConstraints;
-    public final String roomUrl;
-    public final String roomId;
-    public final String clientId;
-    public final String wssUrl;
-    public final String wssPostUrl;
-    public final SessionDescription offerSdp;
-    public final List<IceCandidate> iceCandidates;
+//    public final List<PeerConnection.IceServer> iceServers;
+    public final boolean initiator = false;
+//    public final MediaConstraints pcConstraints;
+//    public final MediaConstraints videoConstraints;
+//    public final MediaConstraints audioConstraints;
+//    public final String roomUrl;
+//    public final String roomId;
+//    public final String clientId;
+//    public final String wssUrl;
+//    public final String wssPostUrl;
+//    public final SessionDescription offerSdp;
+//    public final List<IceCandidate> iceCandidates;
 
+    public final String uid;
+    public final String token;
+
+      public SignalingParameters(String uid, String token)
+      {
+//          this.iceServers = null;
+//          this.initiator = falase;
+//          this.pcConstraints = null;
+//          this.videoConstraints = null;
+//          this.audioConstraints = null;
+//          this.roomUrl = null;
+//          this.roomId = null;
+//          this.clientId = null;
+//          this.wssUrl = null;
+//          this.wssPostUrl = null;
+//          this.offerSdp = null;
+//          this.iceCandidates = null;
+
+          this.uid = uid;
+          this.token = token;
+      }
+
+      /*
     public SignalingParameters(
         List<PeerConnection.IceServer> iceServers,
         boolean initiator, MediaConstraints pcConstraints,
@@ -100,7 +123,11 @@ public interface AppRTCClient {
       this.wssPostUrl = wssPostUrl;
       this.offerSdp = offerSdp;
       this.iceCandidates = iceCandidates;
+
+        this.uid = null;
+        this.token = null;
     }
+      */
   }
 
   /**

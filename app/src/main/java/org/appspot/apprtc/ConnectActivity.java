@@ -254,7 +254,8 @@ public class ConnectActivity extends Activity {
     String url = sharedPref.getString(
         keyprefRoomServerUrl,
         getString(R.string.pref_room_server_url_default));
-    url = url + "/register/" + roomName;
+//    url = url + "/register/" + roomName;
+    url = url + "/api/rooms/" + roomName;
 
     // Check HW codec flag.
     boolean hwCodec = sharedPref.getBoolean(keyprefHwCodec,
@@ -310,7 +311,7 @@ public class ConnectActivity extends Activity {
       url = appendQueryParameter(url, urlVideoParameters);
     } else {
       if (hwCodec && MediaCodecVideoEncoder.isPlatformSupported()) {
-        url = appendQueryParameter(url, "hd=true");
+//        url = appendQueryParameter(url, "hd=true");
       }
     }
 
